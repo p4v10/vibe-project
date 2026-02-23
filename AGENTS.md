@@ -10,7 +10,7 @@ PromptGuard is a monorepo with three packages:
 
 | Package | Path | Stack |
 |---|---|---|
-| Web app | `webapp/` | Next.js 15, Supabase, TypeScript, Tailwind |
+| Web app | `webapp/` | Next.js 16.1.6, Supabase, TypeScript, Tailwind |
 | Chrome extension | `extension/` | TypeScript, Webpack, Chrome Extensions API |
 | Landing page | `landing_page/` | Static HTML/CSS |
 
