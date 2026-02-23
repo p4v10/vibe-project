@@ -4,7 +4,7 @@ import { getSettings } from '../lib/storage'
 import type { ExtensionSettings } from '../lib/storage'
 import { detectAdapter } from './adapters'
 import type { SiteAdapter } from './adapters'
-import { showToast, showBlockOverlay } from './ui'
+import { showToast, showBlockOverlay, showConfirmDialog } from './ui'
 
 let settings: ExtensionSettings | null = null
 let adapter: SiteAdapter | null = null
@@ -57,7 +57,46 @@ function handleSubmission(e: Event, inputEl: HTMLElement): void {
     return
   }
 
-  // 6. Mask: text was modified (secrets/PII redacted) OR policy says mask
+  // 6. High-Risk Confirmation (Priority intercept)
+  const isHighRisk = riskScore?.level === 'high'
+  if (isHighRisk && settings?.confirmHighRisk) {
+    e.stopImmediatePropagation()
+    e.preventDefault()
+
+    // Apply sanitization BEFORE showing dialog so user sends clean text
+    const textWasModified = finalText !== originalText
+    if (textWasModified || decision.action === 'mask') {
+      let textToSend = textWasModified ? finalText : originalText
+      if (decision.action === 'mask') {
+        for (const match of decision.matches.filter((m) => m.action === 'mask')) {
+          const policy = settings!.policies.find((p) => p.id === match.policyId)
+          if (policy?.condition.type === 'keyword' && policy.condition.keyword) {
+            const escaped = policy.condition.keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+            textToSend = textToSend.replace(new RegExp(escaped, 'gi'), '[REDACTED_BY_POLICY]')
+          }
+        }
+      }
+      adapter!.setText(inputEl, textToSend)
+    }
+
+    const lines: string[] = []
+    for (const m of decision.matches) lines.push(`Policy: "${m.policyName}"`)
+    if (!lines.length && riskScore) lines.push(`Risk Score: ${riskScore.score}/100`)
+
+    showConfirmDialog(
+      'PromptGuard: High-Risk Prompt Detected',
+      lines.length ? lines : [`Risk Score: ${riskScore!.score}/100`],
+      () => {
+        isMaskedResubmit = true
+        adapter!.getSubmitButton()?.click()
+        setTimeout(() => { isMaskedResubmit = false }, 200)
+      },
+      () => {},
+    )
+    return
+  }
+
+  // 7. Mask: text was modified (secrets/PII redacted) OR policy says mask
   const textWasModified = finalText !== originalText
   if (textWasModified || decision.action === 'mask') {
     e.stopImmediatePropagation()
@@ -94,12 +133,10 @@ function handleSubmission(e: Event, inputEl: HTMLElement): void {
     return
   }
 
-  // 7. Warn: policy warn OR high risk score
-  const shouldWarn = decision.action === 'warn' || riskScore?.level === 'high'
-  if (shouldWarn) {
+  // 8. Warn: policy warn (non-high risk)
+  if (decision.action === 'warn') {
     const lines: string[] = []
     for (const m of decision.matches) lines.push(`Policy: "${m.policyName}"`)
-    if (!lines.length && riskScore) lines.push(`Risk Score: ${riskScore.score}/100`)
     showToast('warn', '⚠️ PromptGuard: Sensitive data detected', lines, 8000)
   }
 }
@@ -115,6 +152,10 @@ function attachListeners(): void {
 
   const onSubmitClick = (e: Event) => {
     if (isMaskedResubmit) return
+    const target = e.target as Element
+    if (target?.closest?.('#promptguard-ui')) return
+    const submitBtn = adapter!.getSubmitButton()
+    if (!submitBtn || !submitBtn.contains(target)) return
     const currentInput = adapter!.getInputElement()
     if (!currentInput) return
     handleSubmission(e, currentInput)
@@ -140,6 +181,7 @@ chrome.storage.onChanged.addListener((changes) => {
     if (changes.enabled) settings.enabled = changes.enabled.newValue
     if (changes.filters) settings.filters = changes.filters.newValue
     if (changes.policies) settings.policies = changes.policies.newValue
+    if (changes.confirmHighRisk) settings.confirmHighRisk = changes.confirmHighRisk.newValue
   }
 })
 

@@ -118,7 +118,7 @@ export default function DeveloperPage() {
           <Shield className="h-4 w-4 text-indigo-400" /> Quick Start
         </h2>
         <pre className="text-xs text-gray-300 overflow-x-auto leading-relaxed bg-gray-950 rounded-lg p-4 border border-gray-800">
-{`curl -X POST https://your-domain.com/api/v1/scan \\
+{`curl -X POST https://promptguard-p4.vercel.app/api/v1/scan \\
   -H "Authorization: Bearer pg_live_..." \\
   -H "Content-Type: application/json" \\
   -d '{

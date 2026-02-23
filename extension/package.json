@@ -4,11 +4,13 @@
   "private": true,
   "scripts": {
     "build": "webpack --config webpack.config.cjs",
-    "dev": "webpack --config webpack.config.cjs --watch --mode development"
+    "dev": "webpack --config webpack.config.cjs --watch --mode development",
+    "generate-icons": "node scripts/generate-icons.mjs"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.270",
     "copy-webpack-plugin": "^12.0.2",
+    "sharp": "^0.34.5",
     "ts-loader": "^9.5.1",
     "typescript": "^5.4.5",
     "webpack": "^5.91.0",

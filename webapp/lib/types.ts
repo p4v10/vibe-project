@@ -35,7 +35,15 @@ export const PROVIDERS: ProviderInfo[] = [
   },
 ]
 
-export type FilterType = 'email' | 'phone' | 'ssn' | 'credit_card' | 'api_key'
+export type FilterType =
+  | 'email'
+  | 'phone'
+  | 'ssn'
+  | 'credit_card'
+  | 'api_key'
+  | 'address'
+  | 'person_name'
+  | 'dob'
 
 export interface FilterOption {
   id: FilterType
@@ -49,12 +57,16 @@ export const FILTER_OPTIONS: FilterOption[] = [
   { id: 'ssn', label: 'Social Security Numbers', description: 'Redact SSNs' },
   { id: 'credit_card', label: 'Credit Card Numbers', description: 'Redact credit card numbers' },
   { id: 'api_key', label: 'API Keys & Tokens', description: 'Redact API keys and tokens' },
+  { id: 'address', label: 'Street Addresses', description: 'Redact physical addresses' },
+  { id: 'person_name', label: 'Person Names', description: 'Redact first, last, and full names' },
+  { id: 'dob', label: 'Dates of Birth', description: 'Redact dates of birth (multiple formats)' },
 ]
 
 export type SecretType =
   | 'private_key'
   | 'database_url'
   | 'aws_access_key'
+  | 'aws_secret_key'
   | 'jwt'
   | 'bearer_token'
   | 'slack_token'

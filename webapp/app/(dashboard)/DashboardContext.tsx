@@ -15,6 +15,8 @@ interface DashboardCtx {
   setPolicies: Dispatch<SetStateAction<Policy[]>>
   policiesLoading: boolean
   loadPolicies: () => Promise<void>
+  sidebarCollapsed: boolean
+  setSidebarCollapsed: Dispatch<SetStateAction<boolean>>
 }
 
 const DashboardContext = createContext<DashboardCtx | null>(null)
@@ -35,6 +37,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   ])
   const [policies, setPolicies] = useState<Policy[]>([])
   const [policiesLoading, setPoliciesLoading] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 
   function setProvider(p: Provider) {
     setProviderRaw(p)
@@ -61,7 +64,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
   return (
     <DashboardContext.Provider
-      value={{ provider, setProvider, model, setModel, filters, toggleFilter, policies, setPolicies, policiesLoading, loadPolicies }}
+      value={{ provider, setProvider, model, setModel, filters, toggleFilter, policies, setPolicies, policiesLoading, loadPolicies, sidebarCollapsed, setSidebarCollapsed }}
     >
       {children}
     </DashboardContext.Provider>

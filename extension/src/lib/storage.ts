@@ -4,12 +4,14 @@ export interface ExtensionSettings {
   enabled: boolean
   filters: FilterType[]
   policies: Policy[]
+  confirmHighRisk: boolean
 }
 
 export const DEFAULT_SETTINGS: ExtensionSettings = {
   enabled: true,
   filters: ['email', 'phone', 'ssn', 'credit_card', 'api_key'],
   policies: [],
+  confirmHighRisk: false,
 }
 
 export function getSettings(): Promise<ExtensionSettings> {

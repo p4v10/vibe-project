@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import {
   Shield, MessageSquare, Settings, Sliders, LogOut,
   ChevronDown, ChevronUp, Plus, Trash2, ToggleLeft, ToggleRight, Pencil, ShieldCheck, Code2,
+  PanelLeftClose, PanelLeftOpen,
 } from 'lucide-react'
 import { signOut } from '@/lib/actions'
 import { useDashboard } from './DashboardContext'
@@ -86,7 +87,7 @@ function Accordion({
 
 export default function DashboardSidebar({ userEmail }: { userEmail: string }) {
   const pathname = usePathname()
-  const { provider, setProvider, model, setModel, filters, toggleFilter, policies, setPolicies, policiesLoading } = useDashboard()
+  const { provider, setProvider, model, setModel, filters, toggleFilter, policies, setPolicies, policiesLoading, sidebarCollapsed, setSidebarCollapsed } = useDashboard()
 
   const currentProvider = PROVIDERS.find((p) => p.provider === provider)!
 
@@ -176,12 +177,44 @@ export default function DashboardSidebar({ userEmail }: { userEmail: string }) {
   const inputCls = 'w-full bg-gray-800 border border-gray-700 rounded-lg px-2 py-1.5 text-xs text-white placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition'
   const labelCls = 'block text-[10px] text-gray-400 mb-1'
 
+  if (sidebarCollapsed) {
+    return (
+      <aside className="w-14 shrink-0 bg-gray-900 border-r border-gray-800 flex flex-col h-full transition-all duration-200">
+        <div className="flex items-center justify-center py-5 border-b border-gray-800 shrink-0">
+          <Shield className="h-6 w-6 text-indigo-400" />
+        </div>
+        <div className="flex-1 flex flex-col items-center gap-1 py-3">
+          <NavIconLink href="/chat" active={pathname === '/chat'} icon={<MessageSquare className="h-4 w-4" />} label="Chat" />
+          <NavIconLink href="/setup" active={pathname === '/setup'} icon={<Sliders className="h-4 w-4" />} label="Model Setup" />
+          <NavIconLink href="/settings" active={pathname === '/settings'} icon={<Settings className="h-4 w-4" />} label="Settings" />
+          <NavIconLink href="/developer" active={pathname === '/developer'} icon={<Code2 className="h-4 w-4" />} label="Developer" />
+        </div>
+        <div className="px-2 pb-4 flex flex-col items-center gap-2 border-t border-gray-800 pt-3 shrink-0">
+          <button
+            onClick={() => setSidebarCollapsed(false)}
+            className="p-2 rounded-lg text-gray-500 hover:text-white hover:bg-gray-800 transition"
+            title="Expand sidebar"
+          >
+            <PanelLeftOpen className="h-4 w-4" />
+          </button>
+        </div>
+      </aside>
+    )
+  }
+
   return (
-    <aside className="w-72 shrink-0 bg-gray-900 border-r border-gray-800 flex flex-col h-full">
-      {/* Logo */}
+    <aside className="w-72 shrink-0 bg-gray-900 border-r border-gray-800 flex flex-col h-full transition-all duration-200">
+      {/* Logo + collapse button */}
       <div className="flex items-center gap-2.5 px-5 py-5 border-b border-gray-800 shrink-0">
         <Shield className="h-6 w-6 text-indigo-400 shrink-0" />
-        <span className="font-bold text-white text-lg">PromptGuard</span>
+        <span className="font-bold text-white text-lg flex-1">PromptGuard</span>
+        <button
+          onClick={() => setSidebarCollapsed(true)}
+          className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-gray-800 transition"
+          title="Collapse sidebar"
+        >
+          <PanelLeftClose className="h-4 w-4" />
+        </button>
       </div>
 
       {/* Scrollable content */}
@@ -404,6 +437,22 @@ function NavLink({ href, active, icon, children }: {
     >
       {icon}
       {children}
+    </Link>
+  )
+}
+
+function NavIconLink({ href, active, icon, label }: {
+  href: string; active: boolean; icon: React.ReactNode; label: string
+}) {
+  return (
+    <Link
+      href={href}
+      title={label}
+      className={`p-2 rounded-lg transition ${
+        active ? 'bg-indigo-600/20 text-indigo-300' : 'text-gray-500 hover:text-white hover:bg-gray-800'
+      }`}
+    >
+      {icon}
     </Link>
   )
 }

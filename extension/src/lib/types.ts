@@ -2,6 +2,7 @@ export type SecretType =
   | 'private_key'
   | 'database_url'
   | 'aws_access_key'
+  | 'aws_secret_key'
   | 'jwt'
   | 'bearer_token'
   | 'slack_token'
@@ -9,7 +10,15 @@ export type SecretType =
   | 'openai_key'
   | 'env_secret'
 
-export type FilterType = 'email' | 'phone' | 'ssn' | 'credit_card' | 'api_key'
+export type FilterType =
+  | 'email'
+  | 'phone'
+  | 'ssn'
+  | 'credit_card'
+  | 'api_key'
+  | 'address'
+  | 'person_name'
+  | 'dob'
 
 export type Severity = 'medium' | 'high' | 'critical'
 export type RiskLevel = 'low' | 'medium' | 'high' | 'critical'

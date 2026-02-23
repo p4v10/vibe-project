@@ -3,6 +3,7 @@ import { getAdminClient } from '@/lib/supabase/admin'
 import { hashApiKey } from '@/lib/api-key'
 import { scanAndRedactSecrets, calculateRiskScore, sanitize, MAX_PROMPT_BYTES } from '@/lib/firewall'
 import { evaluatePolicies } from '@/lib/policy-engine'
+import { checkRateLimit } from '@/lib/rate-limit'
 import type { FilterType, Policy } from '@/lib/types'
 
 const VALID_MODELS = new Set([
@@ -39,6 +40,22 @@ export async function POST(request: Request) {
   }
   if (keyRow.status !== 'active') {
     return NextResponse.json({ error: 'API key is revoked' }, { status: 403 })
+  }
+
+  const { limited, remaining, resetIn } = checkRateLimit(keyRow.id)
+  if (limited) {
+    return NextResponse.json(
+      { error: 'Rate limit exceeded. Try again later.' },
+      {
+        status: 429,
+        headers: {
+          'Retry-After': String(Math.ceil(resetIn / 1000)),
+          'X-RateLimit-Limit': '60',
+          'X-RateLimit-Remaining': '0',
+          'X-RateLimit-Reset': String(Math.ceil((Date.now() + resetIn) / 1000)),
+        },
+      },
+    )
   }
 
   let body: ScanBody

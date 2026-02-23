@@ -8,7 +8,7 @@ const REDACTION_RULES: Array<{ type: FilterType; pattern: RegExp; replacement: s
   },
   {
     type: 'phone',
-    pattern: /(\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/g,
+    pattern: /(?<![A-Za-z0-9])(\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]\d{3}[-.\s]\d{4}(?![A-Za-z0-9])/g,
     replacement: '[REDACTED_PHONE]',
   },
   {
@@ -25,6 +25,21 @@ const REDACTION_RULES: Array<{ type: FilterType; pattern: RegExp; replacement: s
     type: 'api_key',
     pattern: /\b(sk-[A-Za-z0-9]{20,}|AIza[0-9A-Za-z\-_]{35}|(?:ghp|gho|ghu|ghs|ghr)_[A-Za-z0-9]{36}|xoxb-[0-9]+-[0-9]+-[A-Za-z0-9]+)\b/g,
     replacement: '[REDACTED_API_KEY]',
+  },
+  {
+    type: 'address',
+    pattern: /\b\d{1,5}\s+[A-Z][a-zA-Z0-9\s]{2,40}(?:Street|St|Avenue|Ave|Boulevard|Blvd|Road|Rd|Drive|Dr|Lane|Ln|Court|Ct|Way|Place|Pl|Terrace|Ter|Circle|Cir)\.?(?:\s+(?:Apt|Suite|Ste|Unit|#)\s*[A-Za-z0-9]+)?\b/g,
+    replacement: '[REDACTED_ADDRESS]',
+  },
+  {
+    type: 'person_name',
+    pattern: /\b(?:(?:Mr|Mrs|Ms|Dr|Prof)\.?\s+)?[A-Z][a-z]{1,20}\s+(?:[A-Z][a-z]{0,10}\s+)?[A-Z][a-z]{1,20}\b/g,
+    replacement: '[REDACTED_NAME]',
+  },
+  {
+    type: 'dob',
+    pattern: /\b(?:(?:0?[1-9]|1[0-2])[-\/.](?:0?[1-9]|[12]\d|3[01])[-\/.](?:19|20)\d{2}|(?:19|20)\d{2}[-\/.](?:0?[1-9]|1[0-2])[-\/.](?:0?[1-9]|[12]\d|3[01])|(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+(?:0?[1-9]|[12]\d|3[01])(?:st|nd|rd|th)?,?\s+(?:19|20)\d{2}|(?:0?[1-9]|[12]\d|3[01])\s+(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+(?:19|20)\d{2})\b/gi,
+    replacement: '[REDACTED_DOB]',
   },
 ]
 
@@ -45,7 +60,13 @@ const SECRET_RULES: Array<{ type: SecretType; severity: Severity; pattern: RegEx
     type: 'aws_access_key',
     severity: 'high',
     pattern: /\b(AKIA|AGPA|AROA|ASCA|ASIA)[A-Z0-9]{16}\b/g,
-    replacement: '[REDACTED_AWS_KEY]',
+    replacement: '[REDACTED_AWS_ACCESS_KEY]',
+  },
+  {
+    type: 'aws_secret_key',
+    severity: 'critical',
+    pattern: /(?<![A-Za-z0-9/+])(?=[A-Za-z0-9/+]{40}(?![A-Za-z0-9/+]))[A-Za-z0-9/+]{40}/g,
+    replacement: '[REDACTED_AWS_SECRET_KEY]',
   },
   {
     type: 'openai_key',
@@ -86,8 +107,8 @@ const SECRET_RULES: Array<{ type: SecretType; severity: Severity; pattern: RegEx
 ]
 
 const SECRET_WEIGHTS: Record<SecretType, number> = {
-  private_key: 40, database_url: 35, aws_access_key: 30,
-  jwt: 25, bearer_token: 25, slack_token: 25, github_token: 25, openai_key: 25, env_secret: 15,
+  private_key: 90, database_url: 85, aws_secret_key: 85, aws_access_key: 40,
+  jwt: 30, bearer_token: 30, slack_token: 30, github_token: 30, openai_key: 30, env_secret: 15,
 }
 
 function scoreToLevel(score: number): RiskLevel {

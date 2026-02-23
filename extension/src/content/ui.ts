@@ -20,7 +20,7 @@ function getShadowHost(): { host: HTMLElement; shadow: ShadowRoot } {
   return { host, shadow: _shadow }
 }
 
-export function showToast(type: ToastType, title: string, lines: string[] = [], durationMs = 5000): void {
+export function showToast(type: ToastType, title: string, lines: string[] = [], durationMs = 3000): void {
   const { shadow } = getShadowHost()
   const c = COLORS[type]
 
@@ -64,6 +64,67 @@ export function showToast(type: ToastType, title: string, lines: string[] = [], 
     toast.style.opacity = '0'
     setTimeout(() => toast.remove(), 300)
   }, durationMs)
+}
+
+export function showConfirmDialog(
+  title: string,
+  lines: string[],
+  onConfirm: () => void,
+  onCancel: () => void,
+): void {
+  const { shadow } = getShadowHost()
+  const c = COLORS.warn
+
+  const card = document.createElement('div')
+  card.style.cssText = `
+    pointer-events: auto;
+    margin-bottom: 8px;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid ${c.border};
+    background: ${c.bg};
+    min-width: 280px;
+    max-width: 380px;
+    font-family: system-ui, sans-serif;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  `
+
+  const titleEl = document.createElement('div')
+  titleEl.style.cssText = `color:${c.title};font-size:13px;font-weight:700;margin-bottom:8px;`
+  titleEl.textContent = `⚠️ ${title}`
+  card.appendChild(titleEl)
+
+  for (const line of lines) {
+    const p = document.createElement('div')
+    p.style.cssText = 'color:#9ca3af;font-size:11px;margin-top:4px;'
+    p.textContent = `• ${line}`
+    card.appendChild(p)
+  }
+
+  const btnRow = document.createElement('div')
+  btnRow.style.cssText = 'display:flex;gap:8px;margin-top:12px;'
+
+  const sendBtn = document.createElement('button')
+  sendBtn.style.cssText = `
+    flex:1;padding:6px 0;border-radius:6px;border:1px solid ${c.border};
+    background:#78350f;color:#fef3c7;font-size:12px;font-weight:600;cursor:pointer;
+  `
+  sendBtn.textContent = 'Send anyway'
+  sendBtn.onclick = () => { card.remove(); onConfirm() }
+
+  const cancelBtn = document.createElement('button')
+  cancelBtn.style.cssText = `
+    flex:1;padding:6px 0;border-radius:6px;border:1px solid #374151;
+    background:#1f2937;color:#9ca3af;font-size:12px;cursor:pointer;
+  `
+  cancelBtn.textContent = 'Cancel'
+  cancelBtn.onclick = () => { card.remove(); onCancel() }
+
+  btnRow.appendChild(sendBtn)
+  btnRow.appendChild(cancelBtn)
+  card.appendChild(btnRow)
+
+  shadow.appendChild(card)
 }
 
 export function showBlockOverlay(title: string, lines: string[]): void {

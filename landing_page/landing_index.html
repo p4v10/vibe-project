@@ -99,11 +99,12 @@
         <div class="feature-card">
           <div class="feature-icon">📊</div>
           <h3>Risk Scoring</h3>
-          <p>Every prompt receives a 0–100 risk score based on the severity and quantity of detected secrets. High-risk prompts trigger confirmation dialogs.</p>
+          <p>Every prompt receives a 0–100 risk score. Critical prompts are hard-blocked. High-risk prompts can trigger a confirmation step before sending.</p>
           <ul class="feature-list">
             <li>Low / Medium / High / Critical levels</li>
             <li>Severity-weighted scoring</li>
             <li>Visual risk badges in chat</li>
+            <li>Opt-in "Confirm to send" for high-risk</li>
           </ul>
         </div>
 
@@ -126,7 +127,7 @@
           <ul class="feature-list">
             <li>Works on ChatGPT, Claude, Gemini</li>
             <li>Auto-syncs policies every 30 min</li>
-            <li>Toast &amp; block overlay notifications</li>
+            <li>Toast, block overlay &amp; confirm dialog</li>
             <li>100% local processing</li>
           </ul>
         </div>
@@ -134,12 +135,12 @@
         <div class="feature-card">
           <div class="feature-icon">🔑</div>
           <h3>Developer API</h3>
-          <p>Integrate PromptGuard into your LLM pipeline with a single API call. Bearer token auth, usage tracking, and structured JSON responses.</p>
+          <p>Integrate PromptGuard into your LLM pipeline with a single API call. Bearer token auth, rate limiting, usage tracking, and structured JSON responses.</p>
           <ul class="feature-list">
             <li>POST /api/v1/scan endpoint</li>
+            <li>60 req/min rate limiting per key</li>
             <li>Inline policy evaluation</li>
-            <li>Usage dashboard &amp; metrics</li>
-            <li>Privacy-safe usage logs</li>
+            <li>Usage dashboard &amp; privacy-safe logs</li>
           </ul>
         </div>
 

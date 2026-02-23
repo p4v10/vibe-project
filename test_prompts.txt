@@ -1,0 +1,159 @@
+PromptGuard — Manual QA Test Prompts
+======================================
+Date: 2026-02-23
+
+How to use
+- For extension: enable/disable PII chips as noted; turn ON "Confirm high-risk sends" to test confirm flows.
+- For webapp/API: use Developer Hub key for /api/v1/scan; observe risk score, action, and redactions.
+- Expected behavior hints are indicative; policy setup may change outcomes.
+
+Legend
+- Block = hard block (critical risk or policy block)
+- Confirm = confirm dialog (extension toggle ON) then send sanitized
+- Sanitize = blue toast, sanitized + auto-resubmit (extension)
+- Warn = warning toast (auto-send)
+- Pass = no UI; prompt goes through
+
+----------------------------------------------------------------------
+A. Critical — should Block immediately
+----------------------------------------------------------------------
+
+A1) Private key PEM
+Expected: Block (critical: private_key)
+-----
+Please check this SSH key:
+-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEA2a2rwplBQLDqiPRgTRdyGEAaFUoJnNUibFGmJZiMcJJB
+-----END RSA PRIVATE KEY-----
+
+A2) DB URL + AWS pair (access + secret)
+Expected: Block (critical cumulative: database_url + aws_secret_key + aws_access_key)
+-----
+Connection: postgres://admin:p@ssword123!@prod-db.company.com:5432/users
+AWS: AKIAIOSFODNN7EXAMPLE / wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+
+A3) DB URL alone
+Expected: Block (critical: database_url)
+-----
+Use mysql://root:root@10.0.0.5:3306/app_db
+
+A4) AWS secret key alone (40 chars)
+Expected: Block (critical: aws_secret_key)
+-----
+Secret: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+
+----------------------------------------------------------------------
+B. High risk — Confirm (toggle ON) or Warn/Sanitize
+----------------------------------------------------------------------
+
+B1) GitHub + Slack tokens
+Expected: Confirm (high: github_token + slack_token = 60)
+-----
+GitHub: ghp_aBcDeFgHiJkLmNoPqRsTuVwXyZ1234567890
+Slack: xoxb-123456789-987654321-AbCdEfGhIjKlMnOpQrSt
+
+B2) JWT + Bearer token
+Expected: Confirm (high: jwt + bearer_token = 60)
+-----
+JWT: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiamRvZSJ9.sFlKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+Authorization: Bearer abcdefghijklmnopqrstuvwxyz-._~+/123456
+
+B3) OpenAI key alone
+Expected: Warn or Sanitize depending on filters; high (openai_key = 30)
+-----
+sk-proj-ABCDEFghijklmnopQRSTUV123456
+
+----------------------------------------------------------------------
+C. Sanitize — PII filters (chips ON)
+----------------------------------------------------------------------
+
+C1) Email + phone
+Expected: Sanitize → [REDACTED_EMAIL], [REDACTED_PHONE]
+-----
+Email me at sarah.johnson@acme.corp and call 415-555-0192.
+
+C2) SSN
+Expected: Sanitize → [REDACTED_SSN]
+-----
+Client SSN is 123-45-6789.
+
+C3) Credit card (Visa + Amex)
+Expected: Sanitize → [REDACTED_CREDIT_CARD]
+-----
+Cards: 4111111111111111 and 371449635398431.
+
+C4) Address
+Expected: Sanitize → [REDACTED_ADDRESS]
+-----
+Ship to 123 Main Street Apt 2B.
+
+C5) Person names (first/last/full; with title)
+Expected: Sanitize → [REDACTED_NAME]
+-----
+Dr. Sarah Connor met with John Smith and Mary Jane Watson.
+
+C6) Date of birth — multiple formats
+Expected: Sanitize → [REDACTED_DOB]
+-----
+DOBs:
+- 01/15/1990
+- 1990-01-15
+- January 15th, 1990
+- 15 Jan 1990
+
+C7) API key class (Google style)
+Expected: Sanitize (PII chip: API Keys) → [REDACTED_API_KEY]
+-----
+AIzaSyD-EXAMPLE-1234567890abcdefghijklmnopq
+
+----------------------------------------------------------------------
+D. Policies — mask / warn / block
+----------------------------------------------------------------------
+
+Setup needed in webapp (or sample policies):
+- Mask keyword "confidential"
+- Warn when risk_score > 50
+- Block detection_type = database_url
+
+D1) Keyword mask
+Expected: Sanitize + toast; "confidential" → [REDACTED_BY_POLICY]
+-----
+This memo is confidential and should not be shared.
+
+D2) Detection-type block
+Expected: Block (policy)
+-----
+Use postgresql://admin:pw@db.example.com:5432/prod
+
+D3) Risk-score warn
+Expected: Warn (policy), auto-send
+-----
+Token: ghp_aBcDeFgHiJkLmNoPqRsTuVwXyZ1234567890
+
+----------------------------------------------------------------------
+E. Mixed / Edge
+----------------------------------------------------------------------
+
+E1) Env secret assignment
+Expected: Sanitize (env_secret) → [REDACTED_ENV_SECRET]
+-----
+API_KEY="abcDEF123-456_789"
+
+E2) Phone embedded in key — should NOT be redacted as phone
+Expected: No [REDACTED_PHONE] inside AWS key
+-----
+AKIA1234567890EXAMPLE
+
+E3) Clean baseline
+Expected: Pass
+-----
+What are safe patterns for handling environment variables in Node.js?
+
+E4) Large prompt (webapp/API only)
+Expected: 413 or explicit error if > 32 KB (MAX_PROMPT_BYTES)
+-----
+Repeat a line to exceed size limits.
+
+Notes
+- Confirm dialog requires the extension toggle "Confirm high-risk sends" ON.
+- Outcomes can vary with your current policy set and enabled PII chips.

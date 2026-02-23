@@ -33,6 +33,7 @@ module.exports = {
         { from: 'manifest.json', to: '.' },
         { from: 'src/popup/index.html', to: 'popup/index.html' },
         { from: 'src/popup/popup.css', to: 'popup/popup.css' },
+        { from: 'images', to: 'images' },
       ],
     }),
   ],

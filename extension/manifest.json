@@ -3,14 +3,21 @@
   "name": "PromptGuard",
   "version": "0.1",
   "icons": {
-    "128": "images/icon.png"
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
   },
   "description": "Local prompt firewall — scans and blocks sensitive data before it reaches AI providers.",
   "permissions": ["storage", "alarms"],
   "host_permissions": ["https://promptguard-p4.vercel.app/*"],
   "action": {
     "default_popup": "popup/index.html",
-    "default_title": "PromptGuard"
+    "default_title": "PromptGuard",
+    "default_icon": {
+      "16": "images/icon16.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    }
   },
   "background": {
     "service_worker": "background.js"

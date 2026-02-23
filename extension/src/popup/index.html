@@ -18,19 +18,28 @@
 
   <div class="section">
     <div class="section-title">PII Filters</div>
-    <div id="filterList" class="filter-list"></div>
+    <div id="filterChips" class="chip-grid"></div>
   </div>
 
   <div class="section">
-    <div class="section-title">Active Policies</div>
-    <div id="policyCount" class="policy-count">Loading…</div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Policy Sync</div>
-    <div id="lastSynced" class="sync-status">Never synced</div>
-    <button id="syncBtn" class="sync-btn">Sync Now</button>
+    <div class="section-title">Policies</div>
+    <div id="policyList" class="policy-list">Loading…</div>
+    <div class="policy-sync-row">
+      <div id="lastSynced" class="sync-status">Never synced</div>
+      <button id="syncBtn" class="sync-btn-inline">Sync</button>
+    </div>
     <div id="syncMsg" class="sync-msg"></div>
+  </div>
+
+  <div class="section section--last">
+    <div class="section-title">Behavior</div>
+    <label class="behavior-item">
+      <input type="checkbox" id="confirmHighRiskToggle" />
+      <div class="behavior-text">
+        <span class="behavior-name">Confirm high-risk sends</span>
+        <span class="behavior-hint">Pause and ask before sending high-risk prompts</span>
+      </div>
+    </label>
   </div>
 
   <div class="footer">
