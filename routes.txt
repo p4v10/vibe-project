@@ -1,0 +1,3 @@
+Public: /, /login, /signup
+Protected: /chat, /setup, /settings, /developer
+API: /api/chat, /api/policies (GET/POST/PATCH/PUT/DELETE), /api/dev-keys (GET/POST/DELETE), /api/v1/scan (POST), /api/v1/usage (GET), /auth/callback (GET)

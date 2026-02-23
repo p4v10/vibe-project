@@ -7,7 +7,7 @@ const ALLOWED_EXTENSION_ORIGIN_PREFIX = 'chrome-extension://'
 function corsHeaders(origin: string | null): Record<string, string> {
   const allowed =
     origin &&
-    (origin.startsWith(ALLOWED_EXTENSION_ORIGIN_PREFIX) || origin === 'http://localhost:3000')
+    (origin.startsWith(ALLOWED_EXTENSION_ORIGIN_PREFIX) || origin === 'https://promptguard-p4.vercel.app')
   return allowed
     ? {
         'Access-Control-Allow-Origin': origin,

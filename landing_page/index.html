@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PromptGuard — AI Prompt Firewall</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="logo">🛡 PromptGuard</div>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#api">Developer API</a>
+        <a href="#cta" class="btn-primary">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="badge">Privacy-first · Open source</div>
+      <h1>Stop sensitive data from<br /><span class="gradient-text">leaking into your AI prompts</span></h1>
+      <p class="hero-sub">
+        PromptGuard is a real-time prompt firewall that scans, redacts, and blocks secrets &amp; PII before they reach ChatGPT, Claude, Gemini — or any LLM API.
+      </p>
+      <div class="hero-actions">
+        <a href="#cta" class="btn-primary btn-lg">Try for Free →</a>
+        <a href="#api" class="btn-ghost btn-lg">View API docs</a>
+      </div>
+      <div class="hero-demo">
+        <div class="demo-label">Live example</div>
+        <div class="demo-box">
+          <div class="demo-row">
+            <span class="demo-tag demo-tag--red">Before</span>
+            <span class="demo-text">My DB password is <mark class="mark-red">p@ssw0rd123!</mark> and OpenAI key is <mark class="mark-red">sk-abc123XYZ...</mark></span>
+          </div>
+          <div class="demo-arrow">↓ PromptGuard intercepts</div>
+          <div class="demo-row">
+            <span class="demo-tag demo-tag--green">After</span>
+            <span class="demo-text">My DB password is <mark class="mark-green">[REDACTED_ENV_SECRET]</mark> and OpenAI key is <mark class="mark-green">[REDACTED_OPENAI_KEY]</mark></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats">
+    <div class="container stats-grid">
+      <div class="stat"><span class="stat-num">9+</span><span class="stat-label">Secret types detected</span></div>
+      <div class="stat"><span class="stat-num">5</span><span class="stat-label">PII filter categories</span></div>
+      <div class="stat"><span class="stat-num">&lt;1ms</span><span class="stat-label">Local scan latency</span></div>
+      <div class="stat"><span class="stat-num">3</span><span class="stat-label">AI providers supported</span></div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <h2>Everything you need to <span class="gradient-text">secure your AI usage</span></h2>
+        <p>A complete prompt security toolkit: from the browser to the backend.</p>
+      </div>
+
+      <div class="features-grid">
+
+        <div class="feature-card">
+          <div class="feature-icon">🔍</div>
+          <h3>Secret Scanning</h3>
+          <p>Always-on detection of private keys, database URLs, AWS credentials, JWT tokens, GitHub tokens, OpenAI keys, Slack tokens, and more.</p>
+          <ul class="feature-list">
+            <li>Private Keys / Certificates</li>
+            <li>Database connection strings</li>
+            <li>AWS / GitHub / Slack tokens</li>
+            <li>OpenAI, Anthropic API keys</li>
+          </ul>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🧹</div>
+          <h3>PII Redaction</h3>
+          <p>User-controlled filters automatically strip personally identifiable information before any data leaves your device.</p>
+          <ul class="feature-list">
+            <li>Email addresses</li>
+            <li>Phone numbers</li>
+            <li>Social Security Numbers</li>
+            <li>Credit card numbers &amp; API keys</li>
+          </ul>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Risk Scoring</h3>
+          <p>Every prompt receives a 0–100 risk score based on the severity and quantity of detected secrets. High-risk prompts trigger confirmation dialogs.</p>
+          <ul class="feature-list">
+            <li>Low / Medium / High / Critical levels</li>
+            <li>Severity-weighted scoring</li>
+            <li>Visual risk badges in chat</li>
+          </ul>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🛡</div>
+          <h3>Policy Guardrails</h3>
+          <p>Create custom rules that trigger when specific keywords, secrets, or risk thresholds are detected. Choose to allow, warn, mask, or block.</p>
+          <ul class="feature-list">
+            <li>Keyword matching &amp; masking</li>
+            <li>Detection-type conditions</li>
+            <li>Risk score thresholds</li>
+            <li>Block / Warn / Mask actions</li>
+          </ul>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🧩</div>
+          <h3>Chrome Extension</h3>
+          <p>Intercepts prompts on ChatGPT, Claude, and Gemini directly in the browser. The firewall runs locally — no data sent to our servers.</p>
+          <ul class="feature-list">
+            <li>Works on ChatGPT, Claude, Gemini</li>
+            <li>Auto-syncs policies every 30 min</li>
+            <li>Toast &amp; block overlay notifications</li>
+            <li>100% local processing</li>
+          </ul>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔑</div>
+          <h3>Developer API</h3>
+          <p>Integrate PromptGuard into your LLM pipeline with a single API call. Bearer token auth, usage tracking, and structured JSON responses.</p>
+          <ul class="feature-list">
+            <li>POST /api/v1/scan endpoint</li>
+            <li>Inline policy evaluation</li>
+            <li>Usage dashboard &amp; metrics</li>
+            <li>Privacy-safe usage logs</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section section-dark" id="how-it-works">
+    <div class="container">
+      <div class="section-header">
+        <h2>How it works</h2>
+        <p>A layered, sequential firewall pipeline applied to every prompt.</p>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <h3>Secret Scan (always-on)</h3>
+            <p>Every prompt is scanned using pattern matching for 9+ secret types. Detected secrets are redacted before any further processing.</p>
+          </div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <h3>Risk Score</h3>
+            <p>A severity-weighted score (0–100) is calculated. Critical prompts are hard-blocked. High-risk prompts require user confirmation.</p>
+          </div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <h3>Policy Evaluation</h3>
+            <p>Your custom guardrail policies are evaluated against the detections, risk score, and message text. The highest-priority action wins.</p>
+          </div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <div class="step-content">
+            <h3>PII Filter</h3>
+            <p>User-selected filters strip PII (emails, phones, SSNs, etc.) from the sanitized prompt.</p>
+          </div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step">
+          <div class="step-num">05</div>
+          <div class="step-content">
+            <h3>Sanitized Prompt Sent</h3>
+            <p>Only the clean, redacted prompt reaches the AI provider. The original prompt never leaves your environment.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- API -->
+  <section class="section" id="api">
+    <div class="container">
+      <div class="section-header">
+        <h2>Developer API</h2>
+        <p>Add PromptGuard to any LLM app in minutes.</p>
+      </div>
+
+      <div class="api-grid">
+        <div class="api-info">
+          <h3>One endpoint. Full protection.</h3>
+          <p>The <code>/api/v1/scan</code> endpoint accepts any prompt and returns a sanitized version, risk score, policy decision, and redaction metadata — all in a single request.</p>
+          <ul class="feature-list">
+            <li>Bearer token authentication (<code>pg_live_...</code>)</li>
+            <li>Inline policy support (no setup required)</li>
+            <li>Privacy-safe usage logs (no raw prompt stored)</li>
+            <li>Usage dashboard in Developer Hub</li>
+          </ul>
+        </div>
+        <div class="api-code">
+          <div class="code-block">
+            <div class="code-header">Request</div>
+            <pre><code>curl -X POST https://your-app.vercel.app/api/v1/scan \
+  -H "Authorization: Bearer pg_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "My key is sk-abc123...",
+    "filters": ["email"],
+    "policies": [{
+      "type": "keyword",
+      "keyword": "confidential",
+      "action": "block"
+    }]
+  }'</code></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-header">Response</div>
+            <pre><code>{
+  "sanitizedPrompt": "My key is [REDACTED_OPENAI_KEY]",
+  "riskScore": { "score": 25, "level": "medium" },
+  "isBlocked": false,
+  "redactions": [],
+  "secretDetections": [{ "type": "openai_key", "count": 1 }]
+}</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section cta-section" id="cta">
+    <div class="container cta-inner">
+      <h2>Start protecting your AI prompts today</h2>
+      <p>Free to use. No credit card required. Deploy in minutes.</p>
+      <div class="cta-actions">
+        <a href="/chat" class="btn-primary btn-lg">Open Web App →</a>
+        <a href="https://github.com" class="btn-ghost btn-lg" target="_blank">View on GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="logo">🛡 PromptGuard</div>
+      <p class="footer-copy">© 2026 PromptGuard. Built with Next.js, Supabase, and TypeScript.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

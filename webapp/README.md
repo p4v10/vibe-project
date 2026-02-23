@@ -93,6 +93,6 @@ npm run test
 ## Extension integration
 The Chrome extension syncs policies from:
 ```
-GET http://localhost:3000/api/policies
+GET https://promptguard-p4.vercel.app/api/policies
 ```
 Ensure the webapp is running for policy sync to succeed.
