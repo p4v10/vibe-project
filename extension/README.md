@@ -48,7 +48,7 @@ Then reload the extension from `chrome://extensions` after changes.
 ## Configuration
 The extension syncs policies from the webapp:
 ```
-http://localhost:3000/api/policies
+https://promptguard-p4.vercel.app/api/policies
 ```
 To change the webapp URL, edit `extension/src/background/service_worker.ts`.
 

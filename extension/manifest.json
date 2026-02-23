@@ -9,7 +9,7 @@
   },
   "description": "Local prompt firewall — scans and blocks sensitive data before it reaches AI providers.",
   "permissions": ["storage", "alarms"],
-  "host_permissions": ["https://promptguard-p4.vercel.app/*"],
+  "host_permissions": ["https://promptguard-p4.vercel.app/*", "http://localhost:3000/*"],
   "action": {
     "default_popup": "popup/index.html",
     "default_title": "PromptGuard",
