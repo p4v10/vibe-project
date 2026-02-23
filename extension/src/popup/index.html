@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PromptGuard</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="header">
+    <span class="logo">🛡</span>
+    <span class="title">PromptGuard</span>
+    <label class="toggle">
+      <input type="checkbox" id="enabledToggle" />
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="section">
+    <div class="section-title">PII Filters</div>
+    <div id="filterList" class="filter-list"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Active Policies</div>
+    <div id="policyCount" class="policy-count">Loading…</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Policy Sync</div>
+    <div id="lastSynced" class="sync-status">Never synced</div>
+    <button id="syncBtn" class="sync-btn">Sync Now</button>
+    <div id="syncMsg" class="sync-msg"></div>
+  </div>
+
+  <div class="footer">
+    Manage policies at <a href="http://localhost:3000/settings" target="_blank">localhost:3000</a>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
