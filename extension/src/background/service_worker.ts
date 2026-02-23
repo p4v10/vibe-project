@@ -1,6 +1,6 @@
 import { DEFAULT_SETTINGS } from '../lib/storage'
 
-const WEBAPP_URL = 'http://localhost:3000'
+const WEBAPP_URL = 'https://promptguard-p4.vercel.app'
 const SYNC_ALARM = 'sync-policies'
 
 // Initialize defaults on install

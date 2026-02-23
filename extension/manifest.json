@@ -1,10 +1,10 @@
 {
   "manifest_version": 3,
   "name": "PromptGuard",
-  "version": "1.0.0",
+  "version": "0.1",
   "description": "Local prompt firewall — scans and blocks sensitive data before it reaches AI providers.",
   "permissions": ["storage", "alarms"],
-  "host_permissions": ["http://localhost:3000/*"],
+  "host_permissions": ["https://promptguard-p4.vercel.app/*"],
   "action": {
     "default_popup": "popup/index.html",
     "default_title": "PromptGuard"
