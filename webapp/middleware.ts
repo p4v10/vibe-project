@@ -33,7 +33,8 @@ export default async function middleware(request: NextRequest) {
   const isProtectedRoute =
     pathname.startsWith('/chat') ||
     pathname.startsWith('/setup') ||
-    pathname.startsWith('/settings')
+    pathname.startsWith('/settings') ||
+    pathname.startsWith('/developer')
 
   if (!user && isProtectedRoute) {
     const url = request.nextUrl.clone()
