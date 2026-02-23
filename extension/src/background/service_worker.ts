@@ -37,14 +37,36 @@ export async function syncPolicies(): Promise<void> {
     const res = await fetch(`${WEBAPP_URL}/api/policies`, {
       credentials: 'include',
     })
-    if (!res.ok) throw new Error(`HTTP ${res.status}`)
-    const data = await res.json()
-    if (Array.isArray(data.policies)) {
-      await chrome.storage.local.set({
-        policies: data.policies,
-        lastSyncedAt: new Date().toISOString(),
-      })
+
+    // Authenticated sync succeeded
+    if (res.ok) {
+      const data = await res.json()
+      if (Array.isArray(data.policies)) {
+        await chrome.storage.local.set({
+          policies: data.policies,
+          lastSyncedAt: new Date().toISOString(),
+        })
+      }
+      return
     }
+
+    // Not logged in — fall back to public sample policies
+    if (res.status === 401) {
+      const sampleRes = await fetch(`${WEBAPP_URL}/api/policies/sample`)
+      if (sampleRes.ok) {
+        const sampleData = await sampleRes.json()
+        if (Array.isArray(sampleData.policies)) {
+          await chrome.storage.local.set({
+            policies: sampleData.policies,
+            lastSyncedAt: new Date().toISOString(),
+          })
+          console.info('[PromptGuard] Loaded sample policies (not logged in)')
+          return
+        }
+      }
+    }
+
+    throw new Error(`HTTP ${res.status}`)
   } catch (err) {
     console.error('[PromptGuard] Policy sync failed:', err)
     throw err
