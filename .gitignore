@@ -21,7 +21,7 @@
 */build
 
 # extnsion
-#*/dist
+*/dist
 
 # misc
 .DS_Store
